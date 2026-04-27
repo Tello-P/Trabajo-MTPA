@@ -1,0 +1,14 @@
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.restore
+release.properties
+
+nbproject/
+nb-configuration.xml
+.nb-gradle/
+.idea/
+*.iml
+.vscode/
+
