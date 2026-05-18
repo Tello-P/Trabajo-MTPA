@@ -12,3 +12,4 @@ nb-configuration.xml
 *.iml
 .vscode/
 
+.claude/
