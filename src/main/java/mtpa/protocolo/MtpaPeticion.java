@@ -25,6 +25,7 @@ public class MtpaPeticion extends MtpaProtocolo {
     private MtpaPeticion() {
     }
 
+    //Con este método se pretende obtner los parámetros del comando enviado
     public static MtpaPeticion construir(String msg) {
         String[] fragmentos = msg.trim().split(DELIMITADOR);
         MtpaPeticion peticion = new MtpaPeticion();

@@ -2,6 +2,7 @@ package mtpa.protocolo;
 
 /**
  * Representa una respuesta de error del servidor al cliente.
+ * Mensaje que se devuelve cuando existe error
  *
  * @author Alejandro Franco González & Tello Pérez Garrote
  */

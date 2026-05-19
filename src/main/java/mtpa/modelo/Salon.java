@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Representa un salón de chat del sistema.
  *
- * @author Alejandro Franco González & Tello Pérez Garrote
+ * @author Alefran y TelloP
  */
 public class Salon {
 

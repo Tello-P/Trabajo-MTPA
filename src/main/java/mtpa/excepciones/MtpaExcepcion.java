@@ -1,7 +1,7 @@
 package mtpa.excepciones;
 
 /**
- * Excepción base del sistema MTPA. Contiene todos los códigos de error del protocolo.
+ * Excepciones capturadas por el codigo de errores
  *
  * @author Alejandro Franco González & Tello Pérez Garrote
  */
@@ -21,12 +21,14 @@ public class MtpaExcepcion extends Exception {
     public static final int USUARIO_NO_AUTENTICADO  = 12;
 
     private int codigo;
-
+    
+    //Se llama a la clase exception
     public MtpaExcepcion(int codigo) {
-        super(obtenerMensaje(codigo));
-        this.codigo = codigo;
+        super(obtenerMensaje(codigo)); //Guarda el texto de la exception
+        this.codigo = codigo; //Guarda el código de error
     }
 
+    //Se genra el mensaje de error correspondiente a cada codigo
     private static String obtenerMensaje(int codigo) {
         switch (codigo) {
             case USUARIO_YA_EXISTE:      return "El nombre de usuario ya existe";
