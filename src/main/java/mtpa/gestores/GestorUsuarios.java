@@ -127,7 +127,9 @@ public class GestorUsuarios {
         }
         return true;
     }
-
+    
+    //Busca cual es la ultima key generada
+    //Recorre todas y se queda con la maxima
     private int calcularUltimaKey() {
         int max = 0;
         for (Usuario usuario : usuarios) {
