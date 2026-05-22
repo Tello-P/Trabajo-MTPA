@@ -3,20 +3,18 @@ package mtpa.validadores.impl;
 import mtpa.excepciones.MtpaExcepcion;
 import mtpa.protocolo.MtpaPeticion;
 import mtpa.protocolo.MtpaProtocolo;
-import mtpa.validadores.IValidador;
 
 /**
- * Implementación del validador del protocolo MTPA.
+ * Validador del protocolo MTPA.
  * Comprueba que el mensaje recibido tiene el formato correcto antes de procesarlo.
  * En caso de no tener el formato correcto, se lanza la excepción correspondiente.
  *
  * @author Alejandro Franco González & Tello Pérez Garrote
  */
-public class Validador implements IValidador {
+public class Validador {
 
     private static final int MAX_CARACTERES = 190;
 
-    @Override
     public void validar(String msg) throws MtpaExcepcion {
         //Formato de comando incorrecto
         if (msg == null || msg.trim().isEmpty()) {

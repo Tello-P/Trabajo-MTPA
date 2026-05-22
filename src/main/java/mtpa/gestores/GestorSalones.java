@@ -21,10 +21,8 @@ import java.util.ArrayList;
 public class GestorSalones {
 
     private static final String DIRECTORIO_SALONES = "salones/";
-    private static final int MAX_USUARIOS_SALON = 15;
-
     //Salones predefinidos del sistema, siempre son estos 5
-    private static final String[] NOMBRES_SALONES = {"IA", "Deportes", "Therian", "Manga", "UEMC"};
+    private static final String[] NOMBRES_SALONES = {"IA", "DEPORTES", "THERIAN", "MANGA", "UEMC"};
 
     public GestorSalones() {
         //Se crea la carpeta de salones si no existe
