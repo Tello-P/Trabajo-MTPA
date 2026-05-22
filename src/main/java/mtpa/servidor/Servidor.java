@@ -39,8 +39,7 @@ public class Servidor implements Runnable {
     //Hilo de escucha conexiones
     @Override
     public void run() {
-        try {
-            ServerSocket serverSocket = new ServerSocket(PUERTO);
+        try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
             GestorLogs.info("SISTEMA", "INICIO", "Servidor escuchando en puerto " + PUERTO);
 
             //Se arranca el hilo de heartbeat para controlar los clientes inactivos

@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class GestorHeartbeat extends Thread {
 
-    private static final int INTERVALO_MS = 30000; //cada cuánto se comprueba (30 segundos)
-    private static final int MAX_FALLOS = 2;       //cuántos fallos consecutivos antes de desconectar
+    private static final int INTERVALO_MS = 30000; // cada cuánto se comprueba (30 segundos)
+    private static final int MAX_FALLOS = 2; // cuántos fallos consecutivos antes de desconectar
 
     private ArrayList<ClientHandler> clientes;
 
@@ -27,12 +27,13 @@ public class GestorHeartbeat extends Thread {
         while (true) {
             try {
                 Thread.sleep(INTERVALO_MS);
-                //Se recorre la lista al revés por si hay que eliminar elementos
+                // Se recorre la lista al revés por si hay que eliminar elementos
                 for (int i = clientes.size() - 1; i >= 0; i--) {
                     ClientHandler cliente = clientes.get(i);
                     cliente.incrementarFallosHeartbeat();
                     if (cliente.getFallosHeartbeat() >= MAX_FALLOS) {
-                        //Se fuerza el cierre, el run() del ClientHandler hará el resto (logout y limpieza)
+                        // Se fuerza el cierre, el run() del ClientHandler hará el resto (logout y
+                        // limpieza)
                         String nombre = cliente.getUsername() != null ? cliente.getUsername() : "DESCONOCIDO";
                         GestorLogs.info(nombre, "HEARTBEAT", "Cliente sin respuesta, desconectando");
                         cliente.forzarDesconexion();

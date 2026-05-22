@@ -97,7 +97,12 @@ public class ClientHandler extends Thread {
 
                 case MtpaPeticion.LOGIN: {
                     String loginUsername = peticion.getParametro(0);
-                    int key = Integer.parseInt(peticion.getParametro(1));
+                    int key;
+                    try {
+                        key = Integer.parseInt(peticion.getParametro(1));
+                    } catch (NumberFormatException e) {
+                        throw new MtpaExcepcion(MtpaExcepcion.FORMATO_INCORRECTO);
+                    }
                     gestorUsuarios.login(loginUsername, key);
                     username = loginUsername;
                     //Tras el login se devuelven los salones disponibles
@@ -141,16 +146,17 @@ public class ClientHandler extends Thread {
                 }
 
                 case MtpaPeticion.LEAVE_ROOM: {
-                    String salonSalido = salonActual;
+                    String salonSalido = peticion.getParametro(0);
+                    if (!salonSalido.equals(salonActual)) {
+                        throw new MtpaExcepcion(MtpaExcepcion.SALON_NO_VALIDO);
+                    }
                     salonActual = null;
                     GestorLogs.info(username, "LEAVE_ROOM", "Salió del salón");
                     //Notificación al resto del salón de que el usuario ha salido
-                    if (salonSalido != null) {
-                        String notifSalida = "NOTIF|" + salonSalido + "|El usuario " + username + " ha salido del salón";
-                        for (ClientHandler cliente : clientes) {
-                            if (salonSalido.equals(cliente.salonActual) && !cliente.equals(this)) {
-                                cliente.enviar(new MtpaRespuestaOk(notifSalida).toString());
-                            }
+                    String notifSalida = "NOTIF|" + salonSalido + "|El usuario " + username + " ha salido del salón";
+                    for (ClientHandler cliente : clientes) {
+                        if (salonSalido.equals(cliente.salonActual) && !cliente.equals(this)) {
+                            cliente.enviar(new MtpaRespuestaOk(notifSalida).toString());
                         }
                     }
                     break;
@@ -162,6 +168,9 @@ public class ClientHandler extends Thread {
                         throw new MtpaExcepcion(MtpaExcepcion.SERVIDOR_MANTENIMIENTO);
                     }
                     String salon = peticion.getParametro(0);
+                    if (!salon.equals(salonActual)) {
+                        throw new MtpaExcepcion(MtpaExcepcion.SALON_NO_VALIDO);
+                    }
                     String contenido = peticion.getParametro(1);
                     Mensaje mensaje = gestorSalones.guardarMensaje(salon, username, contenido);
                     //Difusión del mensaje a todos los clientes del salón (incluido el remitente)
@@ -176,7 +185,12 @@ public class ClientHandler extends Thread {
 
                 case MtpaPeticion.GET_HISTORY: {
                     String salon = peticion.getParametro(0);
-                    LocalDate fecha = LocalDate.parse(peticion.getParametro(1));
+                    LocalDate fecha;
+                    try {
+                        fecha = LocalDate.parse(peticion.getParametro(1));
+                    } catch (Exception e) {
+                        throw new MtpaExcepcion(MtpaExcepcion.FORMATO_INCORRECTO);
+                    }
                     ArrayList<Mensaje> historial = gestorSalones.getHistorial(salon, fecha);
                     if (historial.isEmpty()) {
                         enviar(new MtpaRespuestaOk("OK|").toString());
@@ -210,16 +224,17 @@ public class ClientHandler extends Thread {
                 }
 
                 case MtpaPeticion.LEAVE_PRIV: {
-                    String destinoCierre = privActual;
+                    String destinoCierre = peticion.getParametro(0);
+                    if (!destinoCierre.equals(privActual)) {
+                        throw new MtpaExcepcion(MtpaExcepcion.USUARIO_NO_CONECTADO);
+                    }
                     privActual = null;
                     GestorLogs.info(username, "LEAVE_PRIV", "Salió de conversación privada");
                     //Se notifica al otro usuario que el privado se ha cerrado
-                    if (destinoCierre != null) {
-                        for (ClientHandler cliente : clientes) {
-                            if (destinoCierre.equals(cliente.username)) {
-                                cliente.enviar(new MtpaRespuestaOk("PRIV_CLOSED|" + username).toString());
-                                break;
-                            }
+                    for (ClientHandler cliente : clientes) {
+                        if (destinoCierre.equals(cliente.username)) {
+                            cliente.enviar(new MtpaRespuestaOk("PRIV_CLOSED|" + username).toString());
+                            break;
                         }
                     }
                     break;
@@ -231,6 +246,9 @@ public class ClientHandler extends Thread {
                         throw new MtpaExcepcion(MtpaExcepcion.SERVIDOR_MANTENIMIENTO);
                     }
                     String destino = peticion.getParametro(0);
+                    if (!destino.equals(privActual)) {
+                        throw new MtpaExcepcion(MtpaExcepcion.USUARIO_NO_CONECTADO);
+                    }
                     String contenido = peticion.getParametro(1);
                     //Se busca el ClientHandler del destinatario y se le reenvía el mensaje
                     String trama = "PUSH_PRIV|" + username + "|" + contenido;
@@ -302,6 +320,23 @@ public class ClientHandler extends Thread {
 
     //Cierra la conexión, hace logout y elimina al cliente de la lista compartida
     private void desconectar() {
+        if (salonActual != null) {
+            String notifSalida = "NOTIF|" + salonActual + "|El usuario " + username + " ha salido del salón";
+            for (ClientHandler cliente : clientes) {
+                if (salonActual.equals(cliente.salonActual) && !cliente.equals(this)) {
+                    cliente.enviar(new MtpaRespuestaOk(notifSalida).toString());
+                }
+            }
+        }
+        if (privActual != null) {
+            for (ClientHandler cliente : clientes) {
+                if (privActual.equals(cliente.username)) {
+                    cliente.enviar(new MtpaRespuestaOk("PRIV_CLOSED|" + username).toString());
+                    break;
+                }
+            }
+        }
+
         if (username != null) {
             gestorUsuarios.logout(username);
         }
