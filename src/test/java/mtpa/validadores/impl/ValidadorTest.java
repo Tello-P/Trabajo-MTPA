@@ -40,7 +40,40 @@ public class ValidadorTest {
     public void testValidar01OK() {
         Validador validador = new Validador();
         boolean esperado = true;
-        String entrada = "REGISTER|pepe";
+        String entrada = "REGISTER|alejandro";
+        boolean resultado;
+        try {
+            validador.validar(entrada);
+            resultado = true;
+        } catch (MtpaExcepcion e) {
+            resultado = false;
+        }
+        assertEquals(resultado, esperado);
+    }
+
+    //Aqui comprobamos que un mensaje que no se pasa del limite de caracteres se acepta sin problemas
+    @Test
+    public void testValidar02OK() {
+        Validador validador = new Validador();
+        boolean esperado = true;
+        String entrada = "SEND_ROOM|IA|hola que tal estais";
+        boolean resultado;
+        try {
+            validador.validar(entrada);
+            resultado = true;
+        } catch (MtpaExcepcion e) {
+            resultado = false;
+        }
+        assertEquals(resultado, esperado);
+    }
+
+    //Aqui forzamos un mensaje mas largo de la cuenta para asegurarnos de que el validador lo rechaza
+    @Test
+    public void testValidar03KO() {
+        Validador validador = new Validador();
+        boolean esperado = false;
+        String contenido = "a".repeat(200);
+        String entrada = "SEND_ROOM|IA|" + contenido;
         boolean resultado;
         try {
             validador.validar(entrada);

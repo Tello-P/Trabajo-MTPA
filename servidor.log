@@ -1,0 +1,7 @@
+[2026-06-08T17:07:00.918573] | [INFO] | [TEST] | [PRUEBA] | [pruebaDeLog160925221940875]
+[2026-06-08T17:07:00.932553] | [INFO] | [SISTEMA] | [CARGAR_USUARIOS] | [No se encontró fichero de usuarios, se creará uno nuevo]
+[2026-06-08T17:07:00.933953] | [INFO] | [registroOk160925242220958] | [REGISTER] | [Usuario registrado con key: 1]
+[2026-06-08T17:07:00.934999] | [INFO] | [registroKo160925244424000] | [REGISTER] | [Usuario registrado con key: 2]
+[2026-06-08T17:07:00.936631] | [INFO] | [loginOk160925246041125] | [REGISTER] | [Usuario registrado con key: 3]
+[2026-06-08T17:07:00.936741] | [INFO] | [loginOk160925246041125] | [LOGIN] | [Usuario conectado]
+[2026-06-08T17:07:00.937512] | [INFO] | [loginKo160925246946166] | [REGISTER] | [Usuario registrado con key: 4]
