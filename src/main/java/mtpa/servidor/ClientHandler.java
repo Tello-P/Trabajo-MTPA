@@ -192,16 +192,11 @@ public class ClientHandler extends Thread {
                         throw new MtpaExcepcion(MtpaExcepcion.FORMATO_INCORRECTO);
                     }
                     ArrayList<Mensaje> historial = gestorSalones.getHistorial(salon, fecha);
-                    if (historial.isEmpty()) {
-                        enviar(new MtpaRespuestaOk("OK|").toString());
-                    } else {
-                        //Se construye la respuesta con todos los mensajes del día
-                        String resultado = "OK";
-                        for (Mensaje m : historial) {
-                            resultado = resultado + "|" + m.getTimestamp() + "|" + m.getUsername() + "|" + m.getContenido();
-                        }
-                        enviar(new MtpaRespuestaOk(resultado).toString());
+                    String resultado = "HISTORY_DATA|" + salon + "|";
+                    for (Mensaje m : historial) {
+                        resultado += m.getTimestamp() + ";" + m.getUsername() + ";" + m.getContenido() + "#";
                     }
+                    enviar(new MtpaRespuestaOk(resultado).toString());
                     break;
                 }
 
@@ -216,6 +211,7 @@ public class ClientHandler extends Thread {
                     //Se avisa al usuario destino de la apertura del salón privado
                     for (ClientHandler cliente : clientes) {
                         if (destino.equals(cliente.username)) {
+                            cliente.privActual = username;
                             cliente.enviar(new MtpaRespuestaOk("PRIV_INVITE|" + username).toString());
                             break;
                         }
