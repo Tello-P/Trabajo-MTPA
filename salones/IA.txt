@@ -1,0 +1,4 @@
+2026-05-22T16:28:32.938796479|alice|Hola desde netcat!
+2026-06-08T16:26:54.068960117|tello|hola soy tello
+2026-06-08T16:27:01.226488784|alejandro|hola soy alejandro
+2026-06-08T16:50:25.252699188|tello|probando mas de 190 caracteres asasasasgahgfjhagsfhgasjgdhasgdjashgdhjsaghdgshadsadsad safafwqg
