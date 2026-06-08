@@ -90,4 +90,22 @@ public class ClientHandlerSocketTest {
         boolean resultado = respuesta.startsWith("ERROR");
         assertEquals(resultado, esperado);
     }
+
+    //Comprobamos que un heartbeat recibe la confirmacion de que el servidor sigue vivo
+    @Test
+    public void testHeartbeat01OK() throws Exception {
+        String respuesta = enviarComando("HEARTBEAT|SoyAlguienYTeDigoQueAhoraEstoyVivo");
+        boolean esperado = true;
+        boolean resultado = respuesta.startsWith("HEARTBEAT_OK");
+        assertEquals(resultado, esperado);
+    }
+
+    //Comprobamos que si intentamos entrar a un salon sin haber hecho login el servidor lo rechaza
+    @Test
+    public void testSinLogin01KO() throws Exception {
+        String respuesta = enviarComando("JOIN_ROOM|IA");
+        boolean esperado = true;
+        boolean resultado = respuesta.startsWith("ERROR");
+        assertEquals(resultado, esperado);
+    }
 }

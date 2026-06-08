@@ -1,6 +1,9 @@
 package mtpa.gestores;
 
 import mtpa.excepciones.MtpaExcepcion;
+import mtpa.modelo.Mensaje;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -58,6 +61,46 @@ public class GestorSalonesTest {
         boolean resultado;
         try {
             gestor.validarSalon("SalonInventado");
+            resultado = true;
+        } catch (MtpaExcepcion e) {
+            resultado = false;
+        }
+        assertEquals(resultado, esperado);
+    }
+
+    //Comprobamos que al pedir la lista de salones nos devuelve los cinco que tiene el sistema
+    @Test
+    public void testListarSalones01OK() {
+        GestorSalones gestor = new GestorSalones();
+        String esperado = "IA,DEPORTES,THERIAN,MANGA,UEMC";
+        String resultado = gestor.listarSalones();
+        assertEquals(resultado, esperado);
+    }
+
+    //Guardamos un mensaje en un salon y luego comprobamos que aparece en el historial de hoy
+    @Test
+    public void testGuardarMensaje01OK() {
+        GestorSalones gestor = new GestorSalones();
+        boolean esperado = true;
+        boolean resultado;
+        try {
+            gestor.guardarMensaje("IA", "pepe", "hola que tal");
+            ArrayList<Mensaje> historial = gestor.getHistorial("IA", LocalDate.now());
+            resultado = !historial.isEmpty();
+        } catch (MtpaExcepcion e) {
+            resultado = false;
+        }
+        assertEquals(resultado, esperado);
+    }
+
+    //Comprobamos que si intentamos guardar un mensaje en un salon que no existe salta el error
+    @Test
+    public void testGuardarMensaje02KO() {
+        GestorSalones gestor = new GestorSalones();
+        boolean esperado = false;
+        boolean resultado;
+        try {
+            gestor.guardarMensaje("SalonInventado", "pepe", "hola");
             resultado = true;
         } catch (MtpaExcepcion e) {
             resultado = false;

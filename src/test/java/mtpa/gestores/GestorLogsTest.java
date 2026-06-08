@@ -55,4 +55,24 @@ public class GestorLogsTest {
         }
         assertEquals(resultado, esperado);
     }
+
+    //Comprobamos que cuando ocurre un error en el servidor tambien se escribe en el fichero de logs
+    @Test
+    public void testError01OK() {
+        boolean esperado = true;
+        boolean resultado = false;
+        String detalle = "pruebaDeError" + System.nanoTime();
+        GestorLogs.error("TEST", "PRUEBA", detalle);
+        try (BufferedReader br = new BufferedReader(new FileReader("servidor.log"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.contains(detalle)) {
+                    resultado = true;
+                }
+            }
+        } catch (Exception e) {
+            resultado = false;
+        }
+        assertEquals(resultado, esperado);
+    }
 }
